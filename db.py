@@ -5,7 +5,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 # connect to the Mongo Atlas cluster 
-mongo_client = MongoClient(os.getenv("MONGO_URL"))
+mongo_client = MongoClient(os.getenv("MONGO_URI"))
 
 # access the database
 event_manager_db = mongo_client["event_manager_db"]
