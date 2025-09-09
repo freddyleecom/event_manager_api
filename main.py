@@ -4,7 +4,17 @@ from pydantic import BaseModel
 from bson.objectid import ObjectId
 from utils import replace_mongo_id
 from typing import Annotated
+import cloudinary
+import cloudinary.uploader
+import cloudinary.api
 
+
+# Configure Cloudinary
+cloudinary.config(
+    cloud_name="dhqwkwo8e",
+    api_key="544878511352217",
+    api_secret="DB2whHclPE2tpDECsKPQNRq7G0Y"
+)
 
 class EventModel(BaseModel):
     title: str
@@ -13,7 +23,7 @@ class EventModel(BaseModel):
 
 app = FastAPI()
 
-
+ 
 @app.get("/")
 def get_home():
     return {"message": "you are on the home page"}
@@ -42,7 +52,15 @@ def post_event(
     title: Annotated[str, Form()], 
     description: Annotated[str, Form()],
     flyer: Annotated[UploadFile, File()]):
+    # upload flyer to cloudinary
+    upload_result = cloudinary.uploader.upload(flyer.file)
+    print(upload_result)  # Debugging line to check upload result
     # insert the event into the database
+    events_collection.insert_one({
+        "title": title,
+        "description": description,
+        "flyer_url": upload_result.get("secure_url")
+    })
     # events_collection.insert_one(event.model_dump())
     return {"message": "Event added successfully"}
 
