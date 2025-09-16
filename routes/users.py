@@ -19,7 +19,7 @@ def register_user(
        raise HTTPException(status.HTTP_409_CONFLICT, "user already exist!")
     
     # hash your password
-    hashed_password = bcrypt.hashpw(bytes(password), bcrypt.gensalt())
+    hashed_password = bcrypt.hashpw(password.encode("utf-8"), bcrypt.gensalt())
 
     # save user into database
     users_collection.insert_one({
