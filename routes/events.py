@@ -1,19 +1,14 @@
-from fastapi import Form,File, UploadFile, HTTPException,status, APIRouter
+from fastapi import Form,File, UploadFile, HTTPException,status, APIRouter,Depends
 from db import events_collection
 from bson.objectid import ObjectId
 from utils import replace_mongo_id
 from typing import Annotated
 import cloudinary
 import cloudinary.uploader
+from fastapi.security import HTTPBearer,HTTPAuthorizationCredentials
 
 # Create event router
 events_router = APIRouter()
-
- 
-@events_router.get("/")
-def get_home():
-    return {"message": "you are on the home page"}
-
 
 # Events endpoints
 @events_router.get("/events")
@@ -37,7 +32,10 @@ def get_events(title="", description="", limit=10, skip=0):
 def post_event(
     title: Annotated[str, Form()], 
     description: Annotated[str, Form()],
-    flyer: Annotated[UploadFile, File()]):
+    flyer: Annotated[UploadFile, File()],
+    credentials: Annotated[HTTPAuthorizationCredentials,Depends(HTTPBearer())]
+ ):
+    print(credentials)
     # upload flyer to cloudinary
     upload_result = cloudinary.uploader.upload(flyer.file)
     print(upload_result)  # Debugging line to check upload result
