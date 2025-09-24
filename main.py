@@ -2,8 +2,10 @@ from fastapi import FastAPI
 import cloudinary
 from routes.events import events_router
 from routes.users import users_router
+from routes.genai import genai_router
 import os
 from dotenv import load_dotenv
+
 
 load_dotenv()
 
@@ -27,6 +29,7 @@ def get_home():
 # Include the events router
 app.include_router(events_router)
 app.include_router(users_router)
+app.include_router(genai_router)
 
 
 

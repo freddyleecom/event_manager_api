@@ -11,7 +11,7 @@ from enum import Enum
 # defy a user role
 class UserRole(str,Enum):
     ADMIN = "admin"
-    HOST = "host"
+    HOST = "vendor"
     GUEST = "guest"
 
 
